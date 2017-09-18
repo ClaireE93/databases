@@ -21,7 +21,6 @@ exports.query = function (queryString) {
     console.log('Results sent back are: ', results);
   });
 
-  // connection.end();
 };
 
 exports.userPost = function (username) {
@@ -31,7 +30,16 @@ exports.userPost = function (username) {
     console.log(`${username} inserted into user table`);
   });
 
-  // connection.end();
+};
+
+exports.userGet = function (callback) {
+  let queryString = 'SELECT * FROM users';
+  connection.query(queryString, function (error, results, fields) {
+    if (error) { throw error; }
+    console.log('User GET successful');
+    callback(results);
+  });
+
 };
 
 exports.messagePost = function (username, message, roomname) {
@@ -41,5 +49,14 @@ exports.messagePost = function (username, message, roomname) {
     console.log(`${message} from ${username} inserted into messages table`);
   });
 
-  // connection.end();
+};
+
+exports.messageGet = function (callback) {
+  let queryString = 'SELECT users.username, messages.text, messages.room FROM messages INNER JOIN users ON messages.username_id = users.id';
+  connection.query(queryString, function (error, results, fields) {
+    if (error) { throw error; }
+    console.log('Message GET successful');
+    callback(results);
+  });
+
 };

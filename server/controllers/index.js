@@ -3,14 +3,17 @@ var models = require('../models');
 module.exports = {
   messages: {
     get: function (req, res) { //NOTE: Need to send to MODEL functions?
-
+      const callback = function(body) {
+        res.statusCode = 200;
+        res.end(JSON.stringify(body));
+      };
+      models.messages.get(callback);
     }, // a function which handles a get request for all messages
     post: function (req, res) {
       const messageObj = req.body;
       models.messages.post(messageObj); //TODO: This needs to be a promise;
       res.statusCode = 200;
       res.end('User posted to users table');
-
     } // a function which handles posting a message to the database
   },
 

@@ -2,7 +2,9 @@ var db = require('../db');
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
+    get: function (callback) {
+      db.messageGet(callback);
+    }, // a function which produces all the messages
     post: function (messageObj) {
       const { username, message, roomname } = messageObj;
       db.messagePost(username, message, roomname);
