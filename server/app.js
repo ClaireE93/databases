@@ -19,6 +19,10 @@ app.use(morgan('dev'));
 app.use(parser.json());
 
 // Set up our routes
+// app.post('/classes/users', (req, res) => {
+//   console.log('THIS WORKS');
+//   res.end('yay');
+// });
 app.use('/classes', router);
 
 // Serve the client files
@@ -29,4 +33,3 @@ if (!module.parent) {
   app.listen(app.get('port'));
   console.log('Listening on', app.get('port'));
 }
-

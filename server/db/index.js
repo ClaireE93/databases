@@ -9,7 +9,7 @@ var mysql = require('mysql');
 // SEE BELOW FROM MYSQL NPM FOR CONNECTING TO MYSQL:
 const connection = mysql.createConnection({
   user: 'root',
-  password: '',
+  password: 'plantlife',
   database: 'chat'
 });
 
@@ -21,5 +21,25 @@ exports.query = function (queryString) {
     console.log('Results sent back are: ', results);
   });
 
-  connection.end();
+  // connection.end();
+};
+
+exports.userPost = function (username) {
+  let queryString = `INSERT IGNORE INTO users (username) VALUES ("${username}")`;
+  connection.query(queryString, function (error, results, fields) {
+    if (error) { throw error; }
+    console.log(`${username} inserted into user table`);
+  });
+
+  // connection.end();
+};
+
+exports.messagePost = function (username, message, roomname) {
+  let queryString = `INSERT INTO messages (text, username_id, room) VALUES ("${message}", (SELECT id FROM users WHERE username = "${username}"), "${roomname}")`;
+  connection.query(queryString, function (error, results, fields) {
+    if (error) { throw error; }
+    console.log(`${message} from ${username} inserted into messages table`);
+  });
+
+  // connection.end();
 };
