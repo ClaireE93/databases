@@ -7,9 +7,8 @@ module.exports = {
   },
 
   users: {
-    // Ditto as above.
+    // Ditto as above. Get all users, post for a user
     get: function () {},
     post: function () {}
   }
 };
-
