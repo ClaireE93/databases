@@ -14,7 +14,7 @@ module.exports = {
 
       const { url } = req;
       const parsedUrl = urlParse.parse(url);
-      // console.log('parsedUrl', parsedUrl);
+      console.log('parsedUrl', parsedUrl);
       models.messages.get(callback, parsedUrl.query);
     }, // a function which handles a get request for all messages
     post: function (req, res) {
@@ -25,19 +25,9 @@ module.exports = {
         messageObj = req.body;
       }
 
-      const callback = function(err) {
-        if (err) {
-          res.statusCode = 400;
-          res.end('ERROR posting to table: ', err);
-        } else {
-          res.statusCode = 200;
-          res.end('User posted to users table');
-        }
-      };
-
-      models.messages.post(messageObj, callback);
-      // res.statusCode = 200;
-      // res.end('User posted to users table');
+      models.messages.post(messageObj);
+      res.statusCode = 200;
+      res.end('User posted to users table');
     } // a function which handles posting a message to the database
   },
 
