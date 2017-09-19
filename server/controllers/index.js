@@ -14,9 +14,8 @@ module.exports = {
 
       const { url } = req;
       const parsedUrl = urlParse.parse(url);
-      // console.log('parsedUrl', parsedUrl);
       models.messages.get(callback, parsedUrl.query);
-    }, // a function which handles a get request for all messages
+    },
     post: function (req, res) {
       let messageObj;
       if (typeof req.body === 'string') {
@@ -36,13 +35,10 @@ module.exports = {
       };
 
       models.messages.post(messageObj, callback);
-      // res.statusCode = 200;
-      // res.end('User posted to users table');
-    } // a function which handles posting a message to the database
+    }
   },
 
   users: {
-    // Ditto as above
     get: function (req, res) {
       const callback = function(body) {
         const { method, url } = req;
@@ -61,9 +57,17 @@ module.exports = {
       } else {
         userObj = req.body;
       }
-      models.users.post(userObj); //TODO: This needs to be a promise;
-      res.statusCode = 200;
-      res.end('User posted to users table');
+      const callback = (err) => {
+        if (err) {
+          res.statusCode = 400;
+          res.end('FAILED to post user:', err);
+        } else {
+          res.statusCode = 200;
+          res.end('User posted to users table');
+        }
+      };
+
+      models.users.post(userObj, callback);
     }
   }
 };

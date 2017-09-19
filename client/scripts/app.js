@@ -31,13 +31,12 @@ var app = {
     app.fetch(false);
 
     // Poll for new messages
-    // setInterval(function() {
-    //   app.fetch(true);
-    // }, 3000);
+    setInterval(function() {
+      app.fetch(true);
+    }, 3000);
   },
 
   postUsername: function(username) {
-    // console.log('FIRST AJAX CALL', {username});
     $.ajax({
       url: app.server + 'users',
       type: 'POST',

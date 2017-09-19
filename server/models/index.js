@@ -4,20 +4,19 @@ module.exports = {
   messages: {
     get: function (callback, query) {
       db.messageGet(callback, query);
-    }, // a function which produces all the messages
+    },
     post: function (messageObj, callback) {
       const { username, text, roomname } = messageObj;
       db.messagePost(username, text, roomname, callback);
-    } // a function which can be used to insert a message into the database
+    }
   },
 
   users: {
-    // Ditto as above. Get all users, post for a user
     get: function (callback) {
       db.userGet(callback);
     },
-    post: function (userObj) {
-      db.userPost(userObj.username);
+    post: function (userObj, callback) {
+      db.userPost(userObj.username, callback);
     }
   }
 };
