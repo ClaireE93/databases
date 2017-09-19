@@ -49,7 +49,10 @@ exports.messagePost = function(username, text, roomname, callback) {
 
 exports.messageGet = function (callback, query = '') {
   // const queryString = 'SELECT users.username, messages.text, messages.roomname, messages.id FROM messages INNER JOIN users ON messages.username_id = users.id ORDER BY id DESC LIMIT 20'
-  Message.findAll({ attributes: ['text', 'roomname', 'id'],
+  Message.findAll({ attributes: ['text', 'roomname', 'id', 'createdAt'],
+    order: [
+     ['id', 'DESC']
+    ],
     include: [
       {model: User,
         required: true,
@@ -57,13 +60,22 @@ exports.messageGet = function (callback, query = '') {
         where: { id: Sequelize.col('messages.userId') }
       }
     ]
-  }
-)
-.then((messages) => {
-  messages.forEach((message) => {
-    console.log('message is', message);
+  })
+  .then((messages) => {
+    const resultsArr = [];
+    messages.forEach((message) => {
+      const messageObj = message.dataValues;
+      const { username } = messageObj.user.dataValues;
+      console.log('message Obj is', messageObj);
+      const { text, roomname, id, createdAt } = messageObj;
+      const finalObj = { username, text, roomname, id, createdAt };
+      resultsArr.push(finalObj);
+    });
+    return resultsArr;
+  })
+  .then((results) => {
+    callback(results);
   });
-});
 };
 
 
