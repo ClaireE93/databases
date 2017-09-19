@@ -6,8 +6,8 @@ module.exports = {
       db.messageGet(callback);
     }, // a function which produces all the messages
     post: function (messageObj) {
-      const { username, message, roomname } = messageObj;
-      db.messagePost(username, message, roomname);
+      const { username, text, roomname } = messageObj;
+      db.messagePost(username, text, roomname);
     } // a function which can be used to insert a message into the database
   },
 

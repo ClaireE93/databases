@@ -43,7 +43,7 @@ exports.userGet = function (callback) {
 };
 
 exports.messagePost = function (username, message, roomname) {
-  let queryString = `INSERT INTO messages (text, username_id, room) VALUES ("${message}", (SELECT id FROM users WHERE username = "${username}"), "${roomname}")`;
+  let queryString = `INSERT INTO messages (text, username_id, roomname) VALUES ("${message}", (SELECT id FROM users WHERE username = "${username}"), "${roomname}")`;
   connection.query(queryString, function (error, results, fields) {
     if (error) { throw error; }
     console.log(`${message} from ${username} inserted into messages table`);
@@ -52,7 +52,7 @@ exports.messagePost = function (username, message, roomname) {
 };
 
 exports.messageGet = function (callback) {
-  let queryString = 'SELECT users.username, messages.text, messages.room FROM messages INNER JOIN users ON messages.username_id = users.id';
+  let queryString = 'SELECT users.username, messages.text, messages.roomname, messages.id FROM messages INNER JOIN users ON messages.username_id = users.id';
   connection.query(queryString, function (error, results, fields) {
     if (error) { throw error; }
     console.log('Message GET successful');

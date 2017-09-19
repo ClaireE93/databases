@@ -3,7 +3,7 @@ var app = {
 
   //TODO: The current 'handleUsernameClick' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'http://127.0.0.1:3000/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/', //TODO: Server just classes
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -13,6 +13,7 @@ var app = {
   init: function() {
     // Get username
     app.username = window.location.search.substr(10);
+    app.postUsername(app.username);
 
     // Cache jQuery selectors
     app.$message = $('#message');
@@ -30,9 +31,25 @@ var app = {
     app.fetch(false);
 
     // Poll for new messages
-    setInterval(function() {
-      app.fetch(true);
-    }, 3000);
+    // setInterval(function() {
+    //   app.fetch(true);
+    // }, 3000);
+  },
+
+  postUsername: function(username) {
+    // console.log('FIRST AJAX CALL', {username});
+    $.ajax({
+      url: app.server + 'users',
+      type: 'POST',
+      data: JSON.stringify({ username }),
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('username posted for', username);
+      },
+      error: function (error) {
+        console.error('chatterbox: Failed to send message', error);
+      }
+    });
   },
 
   send: function(message) {
@@ -40,11 +57,13 @@ var app = {
 
     // POST the message to the server
     $.ajax({
-      url: app.server,
+      url: app.server + 'messages',
       type: 'POST',
       data: JSON.stringify(message),
+      contentType: 'application/json',
       success: function (data) {
         // Clear messages input
+        console.log('successful message post');
         app.$message.val('');
 
         // Trigger a fetch to update the messages, pass true to animate
@@ -58,33 +77,34 @@ var app = {
 
   fetch: function(animate) {
     $.ajax({
-      url: app.server,
+      url: app.server + 'messages',
       type: 'GET',
       data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
+        const parsedData = JSON.parse(data);
         // Don't bother if we have nothing to work with
-        if (!data.results || !data.results.length) {
+        if (!parsedData.results || !parsedData.results.length) {
           app.stopSpinner();
           return;
         }
 
         // Store messages for caching later
-        app.messages = data.results;
+        app.messages = parsedData.results;
 
         // Get the last message
-        var mostRecentMessage = data.results[0]; //NOTE: Since results are newest first, check newest element at index 0
+        var mostRecentMessage = parsedData.results[parsedData.results.length - 1];
 
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId) {
+        if (mostRecentMessage.id !== app.lastMessageId) {
           // Update the UI with the fetched rooms
-          app.renderRoomList(data.results);
+          app.renderRoomList(parsedData.results);
 
           // Update the UI with the fetched messages
-          app.renderMessages(data.results, animate);
+          app.renderMessages(parsedData.results, animate);
 
           // Store the ID of the most recent message
-          app.lastMessageId = mostRecentMessage.objectId;
+          app.lastMessageId = mostRecentMessage.id;
         }
       },
       error: function(error) {
