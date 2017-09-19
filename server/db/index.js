@@ -53,10 +53,14 @@ exports.messagePost = function(username, text, roomname, callback) {
 };
 
 exports.messageGet = function (callback, query = '') {
+  let order;
+  if (query === 'order=-createdAt') {
+    order = ['id', 'DESC'];
+  } else {
+    order = ['id', 'ASC'];
+  }
   Message.findAll({ attributes: ['text', 'roomname', 'id', 'createdAt'],
-    order: [
-     ['id', 'DESC']
-    ],
+    order: [order],
     include: [
       {model: User,
         required: true,
