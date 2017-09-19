@@ -51,8 +51,13 @@ exports.messagePost = function (username, message, roomname) {
 
 };
 
-exports.messageGet = function (callback) {
-  let queryString = 'SELECT users.username, messages.text, messages.roomname, messages.id FROM messages INNER JOIN users ON messages.username_id = users.id';
+exports.messageGet = function (callback, query = '') {
+  let queryString;
+  if (query = 'order=-createdAt') {
+    queryString = 'SELECT users.username, messages.text, messages.roomname, messages.id FROM messages INNER JOIN users ON messages.username_id = users.id ORDER BY id DESC LIMIT 20';
+  } else {
+    queryString = 'SELECT users.username, messages.text, messages.roomname, messages.id FROM messages INNER JOIN users ON messages.username_id = users.id LIMIT 20';
+  }
   connection.query(queryString, function (error, results, fields) {
     if (error) { throw error; }
     console.log('Message GET successful');

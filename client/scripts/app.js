@@ -93,7 +93,8 @@ var app = {
         app.messages = parsedData.results;
 
         // Get the last message
-        var mostRecentMessage = parsedData.results[parsedData.results.length - 1];
+        // var mostRecentMessage = parsedData.results[parsedData.results.length - 1];
+        var mostRecentMessage = parsedData.results[0];
 
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.id !== app.lastMessageId) {
