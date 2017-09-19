@@ -13,7 +13,9 @@ module.exports = {
 
   users: {
     // Ditto as above. Get all users, post for a user
-    get: function () {},
+    get: function (callback) {
+      db.userGet(callback);
+    },
     post: function (userObj) {
       db.userPost(userObj.username);
     }
